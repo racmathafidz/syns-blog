@@ -1,3 +1,4 @@
+import useSearchStore from "@/stores/searchStore";
 import { Pagination, Row } from "antd";
 
 interface onChangePageType {
@@ -5,16 +6,15 @@ interface onChangePageType {
 }
 
 interface PostsPaginationProps {
-  currentPage: number;
   onChangePage: onChangePageType;
   totalPosts: number;
 }
 
 export default function PostsPagination({
-  currentPage,
   onChangePage,
   totalPosts,
 }: PostsPaginationProps) {
+  const currentPage = useSearchStore((state) => state.currentPage);
   const onChangePageHandler = (page: number) => onChangePage(page);
 
   return (

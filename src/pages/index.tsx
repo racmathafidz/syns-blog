@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { getAllPosts } from "@/api/posts";
 import PostsList from "@/components/posts/postsList";
 import PostsPagination from "@/components/posts/postsPagination";
 import Loading from "@/components/loading";
 import Error from "@/components/error";
+import useSearchStore from "@/stores/searchStore";
 
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
@@ -22,11 +22,13 @@ export async function getServerSideProps() {
 }
 
 export default function Home() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchQuery = useSearchStore((state) => state.searchQuery);
+  const currentPage = useSearchStore((state) => state.currentPage);
+  const setCurrentPage = useSearchStore((state) => state.setCurrentPage);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["posts", currentPage],
-    queryFn: () => getAllPosts(currentPage),
+    queryKey: ["posts", currentPage, searchQuery],
+    queryFn: () => getAllPosts(currentPage, searchQuery),
   });
 
   const onChangePage = (page: number) => {
@@ -44,11 +46,7 @@ export default function Home() {
   return (
     <div className="py-4 px-12">
       <PostsList posts={postsData} />
-      <PostsPagination
-        currentPage={currentPage}
-        onChangePage={onChangePage}
-        totalPosts={totalPosts}
-      />
+      <PostsPagination onChangePage={onChangePage} totalPosts={totalPosts} />
     </div>
   );
 }
