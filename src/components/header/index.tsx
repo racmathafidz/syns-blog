@@ -1,11 +1,11 @@
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   EditOutlined,
   FilterOutlined,
   HomeOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Input, Button } from "antd";
+import { Layout, Input, Button, Popover, Checkbox, PopoverProps } from "antd";
 import Link from "next/link";
 import useSearchStore from "@/stores/searchStore";
 
@@ -15,6 +15,7 @@ const { Search } = Input;
 export default function AppHeader() {
   const setSearchQuery = useSearchStore((state) => state.setSearchQuery);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [arrow, setArrow] = useState<"Show" | "Hide" | "Center">("Show");
 
   const onSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,6 +28,20 @@ export default function AppHeader() {
       setSearchQuery(e.target.value);
     }, 500);
   };
+
+  const mergedArrow = useMemo<PopoverProps["arrow"]>(() => {
+    if (arrow === "Hide") {
+      return false;
+    }
+
+    if (arrow === "Show") {
+      return true;
+    }
+
+    return {
+      pointAtCenter: true,
+    };
+  }, [arrow]);
 
   return (
     <Header className="justify-between">
@@ -42,9 +57,16 @@ export default function AppHeader() {
           onChange={onSearch}
           className="min-w-[400px]"
         />
-        <Button>
-          <FilterOutlined />
-        </Button>
+        <Popover
+          placement="bottomLeft"
+          title="Filter"
+          content={<Checkbox /*onChange={onChange}*/>Only My Blogs</Checkbox>}
+          arrow={mergedArrow}
+        >
+          <Button>
+            <FilterOutlined />
+          </Button>
+        </Popover>
       </div>
       <div className="flex items-center gap-2">
         <Link href="/create">
