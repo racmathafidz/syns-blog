@@ -1,27 +1,38 @@
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Space, Typography } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { Col, Space, Typography } from "antd";
+import { useRouter } from "next/router";
+import { getDetailPost } from "@/api/posts";
+import Skeleton from "@/components/skeleton";
+import Error from "@/components/error";
+import AuthorInformation from "@/components/header/authorInformation";
 
 const { Title, Text } = Typography;
 
 export default function Blogs() {
+  const router = useRouter();
+  const { slug } = router.query;
+
+  const {
+    data: postData,
+    isLoading: isPostDataLoading,
+    isError: isPostDataError,
+    error: postDataError,
+  } = useQuery({
+    queryKey: ["posts", slug],
+    queryFn: () => getDetailPost(slug),
+  });
+
+  if (isPostDataLoading) return <Skeleton />;
+  if (isPostDataError || !postData)
+    return <Error message={postDataError?.message} />;
+
   return (
     <div className="flex justify-center py-8">
       <Col className="max-w-[800px]">
-        <Title>Volo templum causa tracto sub amitto.</Title>
+        <Title>{postData?.data.title}</Title>
+        <AuthorInformation user_id={postData?.data.user_id} />
         <Space direction="vertical">
-          <Space direction="horizontal" className="mb-3">
-            <Avatar size="small" icon={<UserOutlined />} />
-            <Text type="secondary">John Doe</Text>
-          </Space>
-          <Text>
-            Atavus sperno terra. Sed vinum credo. Comparo suscipit officiis.
-            Omnis terra convoco. Cruciamentum colloco optio. Voro clibanus
-            desparatus. Voluptatem centum amiculum. Uxor voluptas copiose.
-            Apparatus ad viriliter. Ceno tollo clam. Curatio vulgus ex. Ter
-            cornu carpo. Creta subvenio bibo. Decretum ulterius adiuvo. Arto
-            adhaero consuasor. Altus approbo arcesso. Votum clam assumenda. Est
-            apostolus aperiam. Demoror cur sonitus.
-          </Text>
+          <Text>{postData?.data.body}</Text>
         </Space>
       </Col>
     </div>

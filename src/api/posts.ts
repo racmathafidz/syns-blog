@@ -22,9 +22,17 @@ export const getAllPosts = async (
 
   if (searchQuery) params["title"] = searchQuery;
 
-  const response = await axios.get<Post[]>(ENDPOINTS.POSTS.GET_ALL_POSTS, {
+  const response = await axios.get<Post[]>(ENDPOINTS.POSTS.GET_POSTS, {
     params,
   });
+
+  return response;
+};
+
+export const getDetailPost = async (slug?: string | string[]) => {
+  const response = await axios.get<Post>(
+    `${ENDPOINTS.POSTS.GET_POSTS}/${slug}`
+  );
 
   return response;
 };
