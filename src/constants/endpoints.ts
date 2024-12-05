@@ -1,9 +1,9 @@
 const ENDPOINTS = {
   POSTS: {
-    GET_ALL_POSTS: "/posts",
+    GET_POSTS: "/posts",
   },
   USERS: {
-    GET_ALL_USERS: "/users",
+    GET_USERS: "/users",
   },
 };
 
