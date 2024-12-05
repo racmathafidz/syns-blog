@@ -1,8 +1,7 @@
 import BlogItemCard from "@/components/posts/postsListItemCard";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Card, Col, Pagination, Row, Space, Typography } from "antd";
-import Link from "next/link";
-const { Title, Text } = Typography;
+import { Avatar, Pagination, Row, Space, Typography } from "antd";
+const { Title } = Typography;
 
 export default function User() {
   return (
