@@ -5,19 +5,36 @@ import {
   HomeOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Input, Button, Popover, Checkbox, PopoverProps } from "antd";
+import {
+  Layout,
+  Input,
+  Button,
+  Popover,
+  Checkbox,
+  PopoverProps,
+  GetProps,
+} from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import useSearchStore from "@/stores/searchStore";
 
 const { Header } = Layout;
 const { Search } = Input;
 
+type SearchProps = GetProps<typeof Input.Search>;
+
 export default function AppHeader() {
+  const router = useRouter();
   const setSearchQuery = useSearchStore((state) => state.setSearchQuery);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [arrow, setArrow] = useState<"Show" | "Hide" | "Center">("Show");
 
-  const onSearch = (
+  const onSearchSubmit: SearchProps["onSearch"] = (value) => {
+    router.push("/");
+    setSearchQuery(value);
+  };
+
+  const onSearchChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (timeoutRef.current) {
@@ -54,7 +71,8 @@ export default function AppHeader() {
         <Search
           placeholder="Search"
           allowClear
-          onChange={onSearch}
+          onSearch={onSearchSubmit}
+          onChange={onSearchChange}
           className="min-w-[400px]"
         />
         <Popover
