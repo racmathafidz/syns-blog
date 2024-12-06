@@ -11,7 +11,9 @@ const { Title } = Typography;
 export default function Create() {
   const router = useRouter();
   const { query } = router;
-  const parsedData = JSON.parse(query.postData as string);
+  const parsedData = query.postData
+    ? JSON.parse(query.postData as string)
+    : null;
   const user = getFromLocalStorage(constants.localStorage.USER_ID) || "";
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -61,7 +63,7 @@ export default function Create() {
             <Input
               size="large"
               type="text"
-              defaultValue={parsedData.title}
+              defaultValue={parsedData ? parsedData.title : ""}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
@@ -80,7 +82,7 @@ export default function Create() {
             <Input.TextArea
               size="large"
               rows={8}
-              defaultValue={parsedData.body}
+              defaultValue={parsedData ? parsedData.body : ""}
               value={body}
               onChange={(e) => setBody(e.target.value)}
               placeholder="Tell your story..."
