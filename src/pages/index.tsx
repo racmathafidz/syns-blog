@@ -11,6 +11,7 @@ export default function Home() {
   const { query } = router;
   const search = (query.search as string) || "";
   const page = parseInt((query.page as string) || "1", 10);
+  const user_id = (query.user_id as string) || "";
 
   const {
     data,
@@ -19,8 +20,8 @@ export default function Home() {
     error: postsDataError,
     refetch: postsDataRefetch,
   } = useQuery({
-    queryKey: ["posts", page, search],
-    queryFn: () => getAllPosts(page, search),
+    queryKey: ["posts", page, search, user_id],
+    queryFn: () => getAllPosts(page, search, user_id),
   });
 
   const postsData = data?.postsData || [];
@@ -32,6 +33,7 @@ export default function Home() {
       pathname: "/",
       query: {
         ...(search && { search }),
+        ...(user_id && { user_id }),
         page: newPage,
       },
     });

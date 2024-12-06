@@ -8,12 +8,18 @@ type SearchProps = GetProps<typeof Input.Search>;
 
 export default function SearchInput() {
   const router = useRouter();
+  const { query } = router;
+  const user_id = (query.user_id as string) || "";
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onRoutePush = (newSearchQuery: string) => {
     router.push({
       pathname: "/",
-      query: { ...(newSearchQuery && { search: newSearchQuery }) },
+      query: {
+        ...(newSearchQuery && { search: newSearchQuery }),
+        ...(user_id && { user_id: user_id }),
+        page: 1,
+      },
     });
   };
 

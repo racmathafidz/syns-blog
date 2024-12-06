@@ -9,6 +9,7 @@ interface Params {
   page: number;
   per_page: number;
   title?: string;
+  user_id?: string;
 }
 
 interface CretePostFormData {
@@ -19,7 +20,8 @@ interface CretePostFormData {
 
 export const getAllPosts = async (
   currentPage?: number,
-  searchQuery?: string | string[]
+  searchQuery?: string | string[],
+  userId?: string
 ) => {
   try {
     const params: Params = {
@@ -29,6 +31,8 @@ export const getAllPosts = async (
 
     if (searchQuery)
       params.title = Array.isArray(searchQuery) ? searchQuery[0] : searchQuery;
+
+    if (userId) params.user_id = userId;
 
     const { data, headers } = await axios.get<Post[]>(
       constants.endpoints.POSTS,
