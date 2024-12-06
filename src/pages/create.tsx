@@ -46,7 +46,11 @@ export default function Create() {
   return (
     <Spin spinning={mutation.isPending}>
       <div className="flex flex-col justify-center items-center py-8">
-        <Form layout="vertical" onFinish={handleSubmit} className="w-2/5">
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          className="w-9/12 sm:w-4/5 lg:w-3/5"
+        >
           <Title level={2} className="text-left">
             Write Your Blog
           </Title>

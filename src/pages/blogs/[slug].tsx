@@ -68,7 +68,7 @@ export default function Blogs(props: BlogsProps) {
 
   return (
     <div className="flex justify-center py-8">
-      <div className="lg:w-3/5">
+      <div className="w-9/12 sm:w-4/5 lg:w-3/5">
         <Title>{postData?.title}</Title>
         <AuthorInformation
           user_data={props.userData}

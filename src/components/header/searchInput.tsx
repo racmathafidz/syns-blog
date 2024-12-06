@@ -45,7 +45,7 @@ export default function SearchInput() {
       allowClear
       onSearch={onSearchSubmit}
       onChange={onSearchChange}
-      className="min-w-[400px]"
+      className="min-w-[50px] lg:min-w-[400px]"
     />
   );
 }

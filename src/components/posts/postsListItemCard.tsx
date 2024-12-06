@@ -10,7 +10,7 @@ interface PostsListItemCardProps {
 
 export default function PostsListItemCard({ post }: PostsListItemCardProps) {
   return (
-    <Col span={12}>
+    <Col xs={24} md={12}>
       <Link href={`/blogs/${post.id}`} className="h-max">
         <Card hoverable={true} className="min-w-[300px] h-full">
           <Card.Meta
