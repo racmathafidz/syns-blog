@@ -11,6 +11,12 @@ interface Params {
   title?: string;
 }
 
+interface CretePostFormData {
+  user: number;
+  title: string;
+  body: string;
+}
+
 export const getAllPosts = async (
   currentPage?: number,
   searchQuery?: string | string[]
@@ -54,5 +60,21 @@ export const getDetailPost = async (
     return data;
   } catch (error) {
     return null;
+  }
+};
+
+export const createPost = async (formData: CretePostFormData) => {
+  if (!formData) {
+    return null;
+  }
+
+  try {
+    const response = await axios.post<Post>(
+      `${constants.endpoints.USERS}/${formData.user}${constants.endpoints.POSTS}`,
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error as any);
   }
 };
