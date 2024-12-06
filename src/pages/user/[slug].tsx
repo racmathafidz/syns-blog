@@ -11,11 +11,11 @@ export default function User() {
         <Title className="ml-4 !mb-0">John Doe</Title>
       </Space>
       <Row gutter={[16, 24]} className="mt-6">
-        {Array(8)
+        {/* {Array(8)
           .fill(null)
           .map((items, i) => (
             <BlogItemCard key={i} />
-          ))}
+          ))} */}
       </Row>
       <Row className="flex items-center justify-center mt-6">
         <Pagination defaultCurrent={1} total={50} />
