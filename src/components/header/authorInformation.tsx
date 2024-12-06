@@ -1,5 +1,5 @@
 import { getUser } from "@/api/users";
-import { Post } from "@/types";
+import { Author, Post } from "@/types";
 import { UserOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, Skeleton, Space, Typography } from "antd";
@@ -7,10 +7,14 @@ import { Avatar, Skeleton, Space, Typography } from "antd";
 const { Text } = Typography;
 
 interface AuthorInformationProps {
+  user_data: Author;
   user_id: Post["user_id"];
 }
 
-export default function AuthorInformation({ user_id }: AuthorInformationProps) {
+export default function AuthorInformation({
+  user_data,
+  user_id,
+}: AuthorInformationProps) {
   const {
     data: userData,
     isLoading: isUserDataLoading,
@@ -18,6 +22,7 @@ export default function AuthorInformation({ user_id }: AuthorInformationProps) {
   } = useQuery({
     queryKey: ["user", user_id],
     queryFn: () => getUser(user_id),
+    initialData: user_data,
     retry: 1,
   });
 
@@ -38,8 +43,8 @@ export default function AuthorInformation({ user_id }: AuthorInformationProps) {
     <Space direction="horizontal" size="middle" className="mb-4">
       <Avatar icon={<UserOutlined />} />
       <Space direction="vertical" size={0}>
-        <Text>{userData?.data.name}</Text>
-        <Text type="secondary">{userData?.data.email}</Text>
+        <Text>{userData?.name}</Text>
+        <Text type="secondary">{userData?.email}</Text>
       </Space>
     </Space>
   );
