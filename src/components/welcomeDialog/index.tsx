@@ -8,6 +8,7 @@ import {
   message,
   Col,
   Select,
+  Spin,
 } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
@@ -87,100 +88,102 @@ export default function WelcomeDialog() {
       closable={false}
       footer={null}
     >
-      <Form layout="vertical" className="mt-6" onFinish={handleSubmit}>
-        <Form.Item
-          label="GoRest Token"
-          name="token"
-          rules={[
-            {
-              required: true,
-              message: "Please input your GoRest Token!",
-            },
-          ]}
-          required
-        >
-          <Input
-            type="text"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            placeholder="Enter your GoRest Token"
-          />
-        </Form.Item>
-        <Text>
-          You can get your GoRest Token{" "}
-          <a
-            href={constants.redirects.GET_ACCESS_TOKEN}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            here
-          </a>
-        </Text>
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username!",
-            },
-          ]}
-          className="mt-4"
-          required
-        >
-          <Input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-          />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-            {
-              type: "email",
-              message: "Please enter a valid email address!",
-            },
-          ]}
-          required
-        >
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-          />
-        </Form.Item>
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "Please select your gender!",
-            },
-          ]}
-          required
-        >
-          <Select
-            placeholder="Select your gender"
-            onChange={(value) => setGender(value)}
-            options={[
-              { value: "male", label: "Male" },
-              { value: "female", label: "Female" },
+      <Spin spinning={mutation.isPending}>
+        <Form layout="vertical" className="mt-6" onFinish={handleSubmit}>
+          <Form.Item
+            label="GoRest Token"
+            name="token"
+            rules={[
+              {
+                required: true,
+                message: "Please input your GoRest Token!",
+              },
             ]}
-          />
-        </Form.Item>
-        <Button type="primary" htmlType="submit" block>
-          {mutation.isPending ? "Creating Account..." : "Create Account"}
-        </Button>
-      </Form>
+            required
+          >
+            <Input
+              type="text"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="Enter your GoRest Token"
+            />
+          </Form.Item>
+          <Text>
+            You can get your GoRest Token{" "}
+            <a
+              href={constants.redirects.GET_ACCESS_TOKEN}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+          </Text>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username!",
+              },
+            ]}
+            className="mt-4"
+            required
+          >
+            <Input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+              {
+                type: "email",
+                message: "Please enter a valid email address!",
+              },
+            ]}
+            required
+          >
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Gender"
+            name="gender"
+            rules={[
+              {
+                required: true,
+                message: "Please select your gender!",
+              },
+            ]}
+            required
+          >
+            <Select
+              placeholder="Select your gender"
+              onChange={(value) => setGender(value)}
+              options={[
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+              ]}
+            />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            Create Account
+          </Button>
+        </Form>
+      </Spin>
     </Modal>
   );
 }
