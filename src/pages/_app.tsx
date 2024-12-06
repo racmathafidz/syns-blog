@@ -15,6 +15,15 @@ export default function App({ Component, pageProps }: AppProps) {
       <ConfigProvider theme={APP_THEME}>
         <Head>
           <title>Syns Blog</title>
+          <meta
+            name="title"
+            content="Syns Blog - Explore the World of Knowledge"
+          />
+          <meta name="author" content="Racmat Hafidz Fadli" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
         <AppLayout>
           <WelcomeDialog />
