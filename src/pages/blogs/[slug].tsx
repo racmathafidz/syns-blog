@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { getDetailPost } from "@/api/posts";
 import Skeleton from "@/components/skeleton";
 import Error from "@/components/error";
-import AuthorInformation from "@/components/header/authorInformation";
+import AuthorInformation from "@/components/users/authorInformation";
 import { GetServerSidePropsContext } from "next";
 import { Author, Post } from "@/types";
 import { getUser } from "@/api/users";
