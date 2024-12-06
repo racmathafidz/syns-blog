@@ -3,7 +3,7 @@ import { getFromLocalStorage } from "./helper";
 import constants from "@/constants";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: constants.baseUrl,
   headers: {
     "Content-Type": "application/json",
   },

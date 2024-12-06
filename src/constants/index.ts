@@ -1,4 +1,5 @@
 const constants = {
+  baseUrl: "https://gorest.co.in/public/v2",
   endpoints: {
     POSTS: "/posts",
     USERS: "/users",
