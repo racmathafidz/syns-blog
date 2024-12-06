@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
-import ENDPOINTS from "@/constants/endpoints";
 import { Author } from "@/types";
+import constants from "@/constants";
 
 export const getUser = async (user_id?: number) => {
   if (!user_id) {
@@ -9,11 +9,27 @@ export const getUser = async (user_id?: number) => {
 
   try {
     const { data } = await axios.get<Author>(
-      `${ENDPOINTS.USERS.GET_USERS}/${user_id}`
+      `${constants.endpoints.USERS}/${user_id}`
     );
 
     return data;
   } catch (error) {
     return null;
+  }
+};
+
+export const createUser = async (formData: Author): Promise<Author | null> => {
+  if (!formData) {
+    return null;
+  }
+
+  try {
+    const response = await axios.post<Author>(
+      constants.endpoints.USERS,
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error((error as any).response.data.message || "Invalid token");
   }
 };
