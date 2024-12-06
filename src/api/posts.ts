@@ -82,3 +82,18 @@ export const createPost = async (formData: CretePostFormData) => {
     throw new Error(error as any);
   }
 };
+
+export const deletePost = async (postId?: number) => {
+  if (!postId) {
+    return null;
+  }
+
+  try {
+    const response = await axios.delete(
+      `${constants.endpoints.POSTS}/${postId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error as any);
+  }
+};
