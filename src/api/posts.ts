@@ -2,6 +2,9 @@ import axios from "@/lib/axios";
 import ENDPOINTS from "@/constants/endpoints";
 import { Post } from "@/types";
 
+const DEFAULT_PAGE_NUMBER = 1;
+const DEFAULT_ROWS_PER_PAGE = 8;
+
 interface Params {
   page: number;
   per_page: number;
@@ -10,29 +13,46 @@ interface Params {
 
 export const getAllPosts = async (
   currentPage?: number,
-  searchQuery?: string
+  searchQuery?: string | string[]
 ) => {
-  const DEFAULT_PAGE_NUMBER = 1;
-  const DEFAULT_ROWS_PER_PAGE = 8;
+  try {
+    const params: Params = {
+      page: currentPage || DEFAULT_PAGE_NUMBER,
+      per_page: DEFAULT_ROWS_PER_PAGE,
+    };
 
-  let params: Params = {
-    page: currentPage || DEFAULT_PAGE_NUMBER,
-    per_page: DEFAULT_ROWS_PER_PAGE,
-  };
+    if (searchQuery)
+      params.title = Array.isArray(searchQuery) ? searchQuery[0] : searchQuery;
 
-  if (searchQuery) params["title"] = searchQuery;
+    const { data, headers } = await axios.get<Post[]>(
+      ENDPOINTS.POSTS.GET_POSTS,
+      {
+        params,
+      }
+    );
 
-  const response = await axios.get<Post[]>(ENDPOINTS.POSTS.GET_POSTS, {
-    params,
-  });
+    const totalPosts = parseInt(headers["x-pagination-total"], 10) || 0;
 
-  return response;
+    return { postsData: data, totalPosts };
+  } catch (error) {
+    return { postsData: [], totalPosts: 0 };
+  }
 };
 
-export const getDetailPost = async (slug?: string | string[]) => {
-  const response = await axios.get<Post>(
-    `${ENDPOINTS.POSTS.GET_POSTS}/${slug}`
-  );
+export const getDetailPost = async (
+  slug?: string | string[]
+): Promise<Post | null> => {
+  if (!slug) {
+    return null;
+  }
 
-  return response;
+  try {
+    const { data } = await axios.get<Post>(
+      `${ENDPOINTS.POSTS.GET_POSTS}/${Array.isArray(slug) ? slug[0] : slug}`
+    );
+
+    return data;
+  } catch (error) {
+    return null;
+  }
 };
