@@ -1,47 +1,46 @@
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import { getAllPosts } from "@/api/posts";
 import PostsList from "@/components/posts/postsList";
 import PostsPagination from "@/components/posts/postsPagination";
 import Loading from "@/components/loading";
 import Error from "@/components/error";
-import useSearchStore from "@/stores/searchStore";
-
-export async function getServerSideProps() {
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["posts"],
-    queryFn: () => getAllPosts(),
-  });
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-}
 
 export default function Home() {
-  const searchQuery = useSearchStore((state) => state.searchQuery);
-  const currentPage = useSearchStore((state) => state.currentPage);
-  const setCurrentPage = useSearchStore((state) => state.setCurrentPage);
+  const router = useRouter();
+  const { query } = router;
+  const search = (query.search as string) || "";
+  const page = parseInt((query.page as string) || "1", 10);
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["posts", currentPage, searchQuery],
-    queryFn: () => getAllPosts(currentPage, searchQuery),
+  const {
+    data,
+    isLoading: isPostsDataLoading,
+    isError: isPostsDataError,
+    error: postsDataError,
+    refetch: postsDataRefetch,
+  } = useQuery({
+    queryKey: ["posts", page, search],
+    queryFn: () => getAllPosts(page, search),
   });
 
-  const onChangePage = (page: number) => {
-    setCurrentPage(page);
-    refetch();
+  const postsData = data?.postsData || [];
+  const totalPosts = data?.totalPosts || 0;
+  const emptyPostsData = postsData.length === 0;
+
+  const onChangePage = (newPage: number) => {
+    router.push({
+      pathname: "/",
+      query: {
+        ...(search && { search }),
+        page: newPage,
+      },
+    });
+    postsDataRefetch();
   };
 
-  const postsData = data?.data;
-  const emptyPostsData = !postsData || postsData.length === 0;
-  const totalPosts = parseInt(data?.headers["x-pagination-total"], 10);
-
-  if (isLoading) return <Loading />;
-  if (isError || emptyPostsData) return <Error message={error?.message} />;
+  if (isPostsDataLoading) return <Loading />;
+  if (isPostsDataError || emptyPostsData)
+    return <Error message={postsDataError?.message || "No posts available."} />;
 
   return (
     <div className="py-4 px-12">
