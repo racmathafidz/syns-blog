@@ -5,10 +5,27 @@ import { getDetailPost } from "@/api/posts";
 import Skeleton from "@/components/skeleton";
 import Error from "@/components/error";
 import AuthorInformation from "@/components/header/authorInformation";
+import { GetServerSidePropsContext } from "next";
+import { Author, Post } from "@/types";
+import { getUser } from "@/api/users";
 
 const { Title, Text } = Typography;
 
-export default function Blogs() {
+interface BlogsProps {
+  postData: Post;
+  userData: Author;
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { slug } = context.params || {};
+  const postData = await getDetailPost(slug);
+  const userData = await getUser(postData?.user_id);
+  return {
+    props: { postData, userData },
+  };
+}
+
+export default function Blogs(props: BlogsProps) {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -20,6 +37,7 @@ export default function Blogs() {
   } = useQuery({
     queryKey: ["posts", slug],
     queryFn: () => getDetailPost(slug),
+    initialData: props.postData,
   });
 
   if (isPostDataLoading) return <Skeleton />;
@@ -29,10 +47,13 @@ export default function Blogs() {
   return (
     <div className="flex justify-center py-8">
       <Col className="max-w-[800px]">
-        <Title>{postData?.data.title}</Title>
-        <AuthorInformation user_id={postData?.data.user_id} />
+        <Title>{postData?.title}</Title>
+        <AuthorInformation
+          user_data={props.userData}
+          user_id={postData?.user_id}
+        />
         <Space direction="vertical">
-          <Text>{postData?.data.body}</Text>
+          <Text>{postData?.body}</Text>
         </Space>
       </Col>
     </div>
