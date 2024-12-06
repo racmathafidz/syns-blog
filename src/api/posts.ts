@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
-import ENDPOINTS from "@/constants/endpoints";
 import { Post } from "@/types";
+import constants from "@/constants";
 
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_ROWS_PER_PAGE = 8;
@@ -25,7 +25,7 @@ export const getAllPosts = async (
       params.title = Array.isArray(searchQuery) ? searchQuery[0] : searchQuery;
 
     const { data, headers } = await axios.get<Post[]>(
-      ENDPOINTS.POSTS.GET_POSTS,
+      constants.endpoints.POSTS,
       {
         params,
       }
@@ -48,7 +48,7 @@ export const getDetailPost = async (
 
   try {
     const { data } = await axios.get<Post>(
-      `${ENDPOINTS.POSTS.GET_POSTS}/${Array.isArray(slug) ? slug[0] : slug}`
+      `${constants.endpoints.POSTS}/${Array.isArray(slug) ? slug[0] : slug}`
     );
 
     return data;
