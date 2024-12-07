@@ -37,8 +37,10 @@ export default function WelcomeDialog() {
     }
   }, []);
 
-  const saveUserData = (data: Author) => {
-    localStorage.setItem(constants.localStorage.USER_ID, data.toString());
+  const saveUserData = (user_id: Author["id"]) => {
+    if (user_id) {
+      localStorage.setItem(constants.localStorage.USER_ID, user_id.toString());
+    }
   };
 
   const invalidatePosts = async () => {
@@ -54,7 +56,7 @@ export default function WelcomeDialog() {
       if (data?.id) {
         setIsModalVisible(false);
         invalidatePosts();
-        saveUserData(data);
+        saveUserData(data.id);
         message.success(`User created successfully! Welcome, ${data?.name}!`);
       } else {
         message.error("Failed to retrieve user ID.");
