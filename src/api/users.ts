@@ -1,6 +1,7 @@
 import axios from "@/lib/axios";
 import { Author } from "@/types";
 import constants from "@/constants";
+import { getAllPosts } from "./posts";
 
 export const getUser = async (user_id?: number) => {
   if (!user_id) {
@@ -28,6 +29,9 @@ export const createUser = async (formData: Author): Promise<Author | null> => {
       constants.endpoints.USERS,
       formData
     );
+
+    getAllPosts();
+
     return response.data;
   } catch (error) {
     throw new Error((error as any).response.data.message || "Invalid token");
