@@ -37,7 +37,7 @@ export default function Blogs(props: BlogsProps) {
 
   const handleEdit = () => {
     router.push({
-      pathname: "/create",
+      pathname: "/edit",
       query: {
         postData: JSON.stringify(postData),
       },

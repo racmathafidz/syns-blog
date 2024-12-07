@@ -1,4 +1,4 @@
-import { createPost } from "@/api/posts";
+import { editPost } from "@/api/posts";
 import constants from "@/constants";
 import { getFromLocalStorage } from "@/lib/helper";
 import { useMutation } from "@tanstack/react-query";
@@ -12,29 +12,33 @@ interface formValue {
   body: string;
 }
 
-export default function Create() {
+export default function Edit() {
   const router = useRouter();
-  const user = getFromLocalStorage(constants.localStorage.USER_ID) || "";
-  const formInitialValues = { title: "", body: "" };
+  const { query } = router;
+  const parsedData = query.postData
+    ? JSON.parse(query.postData as string)
+    : null;
+  const { id, user_id, title, body } = parsedData;
 
   const mutation = useMutation({
-    mutationFn: createPost,
+    mutationFn: editPost,
     onSuccess: (data) => {
       if (data) {
-        message.success("Blog created successfully!");
+        message.success("Blog edited successfully!");
         router.push(`/blogs/${data.id}`);
       } else {
-        message.error("Failed to created your blog, please try again.");
+        message.error("Failed to edit your blog, please try again.");
       }
     },
     onError: () => {
-      message.error("Failed to created your blog, please try again.");
+      message.error("Failed to edit your blog, please try again.");
     },
   });
 
   const handleSubmit = async (value: formValue) => {
     const formData = {
-      user: parseInt(user as string, 10),
+      id,
+      user_id,
       ...value,
     };
 
@@ -47,7 +51,7 @@ export default function Create() {
         <Form
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={formInitialValues}
+          initialValues={{ title, body }}
           className="w-9/12 sm:w-4/5 lg:w-3/5"
         >
           <Title level={2} className="text-left">
