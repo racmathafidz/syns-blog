@@ -15,10 +15,15 @@ interface formValue {
 export default function Edit() {
   const router = useRouter();
   const { query } = router;
-  const parsedData = query.postData
+  const parsedEditData = query.postData
     ? JSON.parse(query.postData as string)
     : null;
-  const { id, user_id, title, body } = parsedData;
+  const { id, user_id, title, body } = parsedEditData || {
+    id: "",
+    user_id: "",
+    title: "",
+    body: "",
+  };
 
   const mutation = useMutation({
     mutationFn: editPost,
