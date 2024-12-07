@@ -2,15 +2,16 @@ import axios from "@/lib/axios";
 import { Author } from "@/types";
 import constants from "@/constants";
 import { getAllPosts } from "./posts";
+import Mustache from "@/lib/mustache";
 
-export const getUser = async (user_id?: number) => {
-  if (!user_id) {
+export const getUser = async (id?: number) => {
+  if (!id) {
     return null;
   }
 
   try {
     const { data } = await axios.get<Author>(
-      `${constants.endpoints.USERS}/${user_id}`
+      Mustache(constants.endpoints.GET_USERS, { id })
     );
 
     return data;
@@ -26,7 +27,7 @@ export const createUser = async (formData: Author): Promise<Author | null> => {
 
   try {
     const response = await axios.post<Author>(
-      constants.endpoints.USERS,
+      constants.endpoints.CREATE_USERS,
       formData
     );
 
