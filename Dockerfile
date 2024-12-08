@@ -7,7 +7,7 @@ RUN npm cache clean --force
 
 COPY package*.json ./
 
-RUN npm install --omit=dev  --verbose
+RUN npm install --omit=dev --verbose
 
 COPY . .
 
