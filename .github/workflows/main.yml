@@ -1,4 +1,4 @@
-name: CI Pipeline for Next.js (Docker)
+name: CI Pipeline
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Cache Docker layers
         uses: actions/cache@v2
@@ -27,25 +27,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Build Docker image for Next.js app
+      - name: Build Docker image
         run: |
           docker build -t syns-blog .
 
-      - name: Run Docker container for Next.js app
+      - name: Run Next.js app in Docker container
         run: |
-          docker run -d -p 3000:3000 --name nextjs syns-blog
+          docker run --rm -v $(pwd):/app -w /app -p 3000:3000 node:20-alpine npm run build
+          docker run --rm -v $(pwd):/app -w /app -p 3000:3000 node:20-alpine npm run start
+          # Wait for the application to start
+          sleep 5
 
-      - name: Wait for Next.js to start
+      - name: Test the application
         run: |
-          sleep 10
+          curl --fail http://localhost:3000 || exit 1
 
-      - name: Archive build logs and outputs
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-logs
-          path: build/
-
-      - name: Stop and remove Docker container
+      - name: Stop the container after tests
         run: |
-          docker stop nextjs
-          docker rm nextjs
+          docker ps -q --filter "name=syns-blog" | xargs docker stop
