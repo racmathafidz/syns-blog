@@ -11,14 +11,16 @@ import {
   Spin,
 } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createUser } from "@/api/users";
 import { getFromLocalStorage } from "@/lib/helper";
 import constants from "@/constants";
+import { Author } from "@/types";
 
 const { Text } = Typography;
 
 export default function WelcomeDialog() {
+  const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
@@ -35,15 +37,26 @@ export default function WelcomeDialog() {
     }
   }, []);
 
+  const saveUserData = (user_id: Author["id"]) => {
+    if (user_id) {
+      localStorage.setItem(constants.localStorage.USER_ID, user_id.toString());
+    }
+  };
+
+  const invalidatePosts = async () => {
+    await queryClient.refetchQueries({
+      queryKey: ["posts"],
+      type: "active",
+    });
+  };
+
   const mutation = useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
       if (data?.id) {
         setIsModalVisible(false);
-        localStorage.setItem(
-          constants.localStorage.USER_ID,
-          data?.id.toString()
-        );
+        invalidatePosts();
+        saveUserData(data.id);
         message.success(`User created successfully! Welcome, ${data?.name}!`);
       } else {
         message.error("Failed to retrieve user ID.");

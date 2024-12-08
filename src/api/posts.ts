@@ -1,6 +1,7 @@
 import axios from "@/lib/axios";
 import { Post } from "@/types";
 import constants from "@/constants";
+import Mustache from "@/lib/mustache";
 
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_ROWS_PER_PAGE = 8;
@@ -35,7 +36,7 @@ export const getAllPosts = async (
     if (userId) params.user_id = userId;
 
     const { data, headers } = await axios.get<Post[]>(
-      constants.endpoints.POSTS,
+      constants.endpoints.GET_POSTS,
       {
         params,
       }
@@ -57,8 +58,9 @@ export const getDetailPost = async (
   }
 
   try {
+    const id = Array.isArray(slug) ? slug[0] : slug;
     const { data } = await axios.get<Post>(
-      `${constants.endpoints.POSTS}/${Array.isArray(slug) ? slug[0] : slug}`
+      Mustache(constants.endpoints.GET_DETAIL_POSTS, { id })
     );
 
     return data;
@@ -73,8 +75,9 @@ export const createPost = async (formData: CretePostFormData) => {
   }
 
   try {
+    const id = formData.user;
     const response = await axios.post<Post>(
-      `${constants.endpoints.USERS}/${formData.user}${constants.endpoints.POSTS}`,
+      Mustache(constants.endpoints.CREATE_POSTS, { id }),
       formData
     );
     return response.data;
@@ -89,8 +92,9 @@ export const editPost = async (formData: Post) => {
   }
 
   try {
+    const id = formData.id;
     const response = await axios.put<Post>(
-      `${constants.endpoints.POSTS}/${formData.id}`,
+      Mustache(constants.endpoints.EDIT_POSTS, { id }),
       formData
     );
     return response.data;
@@ -99,14 +103,14 @@ export const editPost = async (formData: Post) => {
   }
 };
 
-export const deletePost = async (postId?: number) => {
-  if (!postId) {
+export const deletePost = async (id?: number) => {
+  if (!id) {
     return null;
   }
 
   try {
     const response = await axios.delete(
-      `${constants.endpoints.POSTS}/${postId}`
+      Mustache(constants.endpoints.DELETE_POSTS, { id })
     );
     return response.data;
   } catch (error) {
