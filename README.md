@@ -1,40 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Syns Blog
+
+Syns Blod is a blog post application built with Next.js.
+
+## Demo
+Check out the live demo: [Syns Blog](https://syns-blog.vercel.app/)
+
+---
+
+## Tech Stack
+### Dependencies
+- **TypeScript**: `^5`
+- **Next.js**: `^13.5.7`
+- **React**: `^18.2.0`
+- **Ant Design**: `^5.22.3`
+- **React Query**: `^5.62.2`
+- **Axios**: `^1.7.8`
+- **Tailwind CSS**: `^3`
+- **ESLint**: `^8`
+
+---
+
+## Prerequisites
+- **Node.js**: Version 16 or later.
+- **npm**: Version 8 or later.
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
+### Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/racmathafidz/syns-blog.git
+cd syns-blog
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Environment Setup
+1. Copy ```.env.example``` to ```.env.local.```
+2. Configure the necessary environment variables.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Run Development Server
+```bash
+npm run dev
+```
+The app will be available at http://localhost:3000.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Docker Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Pull Docker Image and Install Dependencies
+```bash
+make pull-image && make install
+```
 
-## Learn More
+### Start the Development Environment
+```bash
+make start
+```
+The app will be available at http://localhost:3000.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Support
+If you encounter any issues or have questions, feel free to create an issue on GitHub or reach out to the maintainer.
