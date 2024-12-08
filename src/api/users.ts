@@ -35,6 +35,8 @@ export const createUser = async (formData: Author): Promise<Author | null> => {
 
     return response.data;
   } catch (error) {
-    throw new Error((error as any).response.data.message || "Invalid token");
+    throw new Error(
+      (error as any).response.data.message || "Invalid token or taken email"
+    );
   }
 };
