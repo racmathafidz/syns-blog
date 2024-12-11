@@ -1,6 +1,7 @@
 import axios from "axios";
-import { getFromLocalStorage } from "./helper";
+import helpers from "./helper";
 import constants from "@/constants";
+import { message } from "antd";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -12,7 +13,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = getFromLocalStorage(constants.localStorage.ACCESS_TOKEN);
+    const token = helpers.storage.getFromLocalStorage(
+      constants.localStorage.ACCESS_TOKEN
+    );
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -50,32 +53,43 @@ axiosInstance.interceptors.response.use(
     // 500: Internal server error. This could be caused by internal program errors.
 
     switch (statusCode) {
+      case 400:
+        message.error("Error: Bad request");
+        break;
       case 401:
-        console.error("Unauthorized - Redirect to login");
+        message.error(`Error: ${errorResponse.data.message}`);
         break;
       case 403:
-        console.error("Unauthorized - Redirect to login");
+        message.error("Error: Unauthorized");
         break;
       case 404:
-        console.error("Resource not found");
+        // message.error("Error: Resource not found");
         break;
       case 405:
-        console.error("Method not allowed");
+        message.error("Error: Method not allowed");
         break;
       case 415:
-        console.error("Unsupported media type");
+        message.error("Error: Unsupported media type");
         break;
       case 422:
-        console.error("Data validation failed");
+        if (Array.isArray(errorResponse.data)) {
+          errorResponse.data.map((items: any) =>
+            message.error(`Error: ${items.field} ${items.message}`)
+          );
+        } else {
+          message.error(
+            `Error: ${errorResponse.data.field} ${errorResponse.data.message}`
+          );
+        }
         break;
       case 429:
-        console.error("Too many requests");
+        message.error("Error: Too many requests");
         break;
       case 500:
-        console.error("Server error - Try again later");
+        message.error("Server error - Try again later");
         break;
       default:
-        console.error(`Unhandled status code: ${statusCode}`);
+        message.error(`Error: status code ${statusCode}`);
     }
 
     return Promise.reject(error);

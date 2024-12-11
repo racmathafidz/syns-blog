@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button, message, Modal, Typography } from "antd";
 import { useRouter } from "next/router";
-import { deletePost, getDetailPost } from "@/api/posts";
+import { deletePost } from "@/api/posts";
 import Skeleton from "@/components/skeleton";
 import Error from "@/components/error";
 import AuthorInformation from "@/components/users/authorInformation";
 import { Author, Post } from "@/types";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { getFromLocalStorage } from "@/lib/helper";
+import helpers from "@/lib/helper";
 import constants from "@/constants";
+import { useDetailPostsQuery } from "@/hooks";
 
 const { Title, Text } = Typography;
 
@@ -18,7 +18,8 @@ interface BlogsProps {
 }
 
 export default function Blogs(props: BlogsProps) {
-  const user_id = getFromLocalStorage(constants.localStorage.USER_ID) || "0";
+  const user_id =
+    helpers.storage.getFromLocalStorage(constants.localStorage.USER_ID) || "0";
   const router = useRouter();
   const { slug } = router.query;
 
@@ -28,10 +29,7 @@ export default function Blogs(props: BlogsProps) {
     isPending: isPostDataPending,
     isError: isPostDataError,
     error: postDataError,
-  } = useQuery({
-    queryKey: ["posts", slug],
-    queryFn: () => getDetailPost(slug),
-  });
+  } = useDetailPostsQuery(slug);
 
   const myOwnPost = parseInt(user_id as string, 10) === postData?.user_id;
 

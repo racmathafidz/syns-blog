@@ -13,7 +13,7 @@ import {
 import { SmileOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createUser } from "@/api/users";
-import { getFromLocalStorage } from "@/lib/helper";
+import helpers from "@/lib/helper";
 import constants from "@/constants";
 import { Author } from "@/types";
 
@@ -29,7 +29,7 @@ export default function WelcomeDialog() {
   const status = "active";
 
   useEffect(() => {
-    const storedToken = getFromLocalStorage(
+    const storedToken = helpers.storage.getFromLocalStorage(
       constants.localStorage.ACCESS_TOKEN
     );
     if (!storedToken) {
@@ -43,28 +43,20 @@ export default function WelcomeDialog() {
     }
   };
 
-  const invalidatePosts = async () => {
-    await queryClient.refetchQueries({
-      queryKey: ["posts"],
-      type: "active",
-    });
-  };
-
   const mutation = useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
       if (data?.id) {
         setIsModalVisible(false);
-        invalidatePosts();
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
         saveUserData(data.id);
         message.success(`User created successfully! Welcome, ${data?.name}!`);
       } else {
         message.error("Failed to retrieve user ID.");
       }
     },
-    onError: (error) => {
+    onError: () => {
       localStorage.removeItem(constants.localStorage.ACCESS_TOKEN);
-      message.error(`Failed: ${error.message}. Please try again.`);
     },
   });
 

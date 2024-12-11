@@ -1,5 +1,5 @@
 import constants from "@/constants";
-import { getFromLocalStorage } from "@/lib/helper";
+import helpers from "@/lib/helper";
 import { FilterOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Popover, PopoverProps } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
@@ -11,7 +11,9 @@ export default function FilterPopover() {
   const { query } = router;
   const search = (query.search as string) || "";
   const page = parseInt((query.page as string) || "1", 10);
-  const user_id = getFromLocalStorage(constants.localStorage.USER_ID);
+  const user_id = helpers.storage.getFromLocalStorage(
+    constants.localStorage.USER_ID
+  );
   const [arrow, setArrow] = useState<"Show" | "Hide" | "Center">("Show");
 
   const mergedArrow = useMemo<PopoverProps["arrow"]>(() => {
