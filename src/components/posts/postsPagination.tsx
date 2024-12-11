@@ -1,3 +1,4 @@
+import { useParseQueryParams } from "@/hooks";
 import { Pagination, Row } from "antd";
 import { useRouter } from "next/router";
 
@@ -15,10 +16,7 @@ export default function PostsPagination({
   totalPosts,
 }: PostsPaginationProps) {
   const router = useRouter();
-  const { query } = router;
-  const search = (query.search as string) || "";
-  const page = parseInt((query.page as string) || "1", 10);
-  const user_id = (query.user_id as string) || "";
+  const { search, page, user_id } = useParseQueryParams();
 
   const onChangePageHandler = (newPage: number) => {
     router.push({
@@ -29,6 +27,7 @@ export default function PostsPagination({
         page: newPage,
       },
     });
+
     postsDataRefetch();
   };
 
